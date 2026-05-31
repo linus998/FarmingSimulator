@@ -1,38 +1,885 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Farm Planner</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Engineers Farming</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --soil: #2C1A0E;
+    --soil-mid: #4A2C14;
+    --soil-light: #7A4E2D;
+    --wheat: #D4A843;
+    --wheat-light: #E8C877;
+    --wheat-pale: #F5E6C0;
+    --green: #3D6B2E;
+    --green-light: #5A9645;
+    --green-pale: #C8E6B8;
+    --sky: #8BBDD4;
+    --sky-pale: #D6EDF7;
+    --rust: #B54A1F;
+    --rust-light: #E07040;
+    --cream: #F9F3E8;
+    --text: #1A0F07;
+    --text-mid: #4A3020;
+    --text-light: #7A6050;
+    --border: rgba(42,26,14,0.15);
+    --surface: #FFFCF5;
+    --surface-2: #F5EDD8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--soil);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .header-stripe {
+    background: var(--wheat);
+    height: 4px;
+  }
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .logo {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .logo-main {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 2rem;
+    color: var(--wheat);
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+  .logo-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+    color: var(--wheat-light);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .header-year {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--wheat-pale);
+    opacity: 0.6;
+    letter-spacing: 0.1em;
+  }
+  .btn-settings {
+    background: var(--soil-mid);
+    border: 1px solid var(--soil-light);
+    color: var(--wheat-light);
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.45rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-settings:hover { background: var(--soil-light); }
+
+  /* ── STATUS BAR ── */
+  #status-bar {
+    background: var(--green);
+    color: #fff;
+    font-size: 0.8rem;
+    text-align: center;
+    padding: 0.3rem 1rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    display: none;
+  }
+  #status-bar.show { display: block; }
+  #status-bar.error { background: var(--rust); }
+  #status-bar.warn { background: var(--wheat); color: var(--soil); }
+
+  /* ── MAIN LAYOUT ── */
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* ── YEAR GRID ── */
+  .year-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+  @media (max-width: 900px) { .year-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 500px) { .year-grid { grid-template-columns: 1fr; } }
+
+  /* ── MONTH CARD ── */
+  .month-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .month-card:hover { box-shadow: 0 4px 20px rgba(42,26,14,0.12); }
+
+  .month-header {
+    background: var(--soil-mid);
+    padding: 0.65rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .month-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--wheat);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .month-season {
+    font-size: 0.7rem;
+    color: var(--wheat-light);
+    opacity: 0.7;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .month-body {
+    padding: 0.75rem;
+    min-height: 80px;
+  }
+
+  /* ── TASK ITEMS ── */
+  .task-list { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 0.6rem; }
+
+  .task-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.5rem 0.65rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    position: relative;
+  }
+  .task-item.done { opacity: 0.55; }
+  .task-item.done .task-label { text-decoration: line-through; }
+
+  .task-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .task-dot.cultivating { background: var(--soil-light); }
+  .task-dot.planting    { background: var(--green-light); }
+  .task-dot.fertilizing { background: var(--wheat); }
+  .task-dot.liming      { background: var(--sky); }
+  .task-dot.harvesting  { background: var(--rust-light); }
+  .task-dot.selling     { background: #9C6BD4; }
+  .task-dot.other       { background: var(--text-light); }
+
+  .task-content { flex: 1; min-width: 0; }
+  .task-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .task-meta {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .task-actions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .task-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-light);
+    font-size: 0.85rem;
+    padding: 2px 4px;
+    border-radius: 4px;
+    line-height: 1;
+    transition: color 0.15s, background 0.15s;
+  }
+  .task-btn:hover { background: var(--border); color: var(--text); }
+  .task-btn.done-btn:hover { color: var(--green); }
+  .task-btn.del-btn:hover { color: var(--rust); }
+
+  /* ── ADD TASK BTN ── */
+  .add-task-btn {
+    width: 100%;
+    background: none;
+    border: 1px dashed rgba(42,26,14,0.2);
+    border-radius: 6px;
+    padding: 0.4rem;
+    color: var(--text-light);
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.03em;
+  }
+  .add-task-btn:hover {
+    background: var(--surface-2);
+    border-color: var(--soil-light);
+    color: var(--text);
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,15,7,0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 1.75rem;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 20px 60px rgba(26,15,7,0.3);
+    transform: translateY(12px);
+    transition: transform 0.2s;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+
+  .modal h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--soil);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 1.25rem;
+  }
+
+  .form-group { margin-bottom: 1rem; }
+  .form-group label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-light);
+    margin-bottom: 0.35rem;
+  }
+  .form-group select,
+  .form-group input[type="text"] {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: var(--cream);
+    border-radius: 7px;
+    padding: 0.55rem 0.75rem;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.92rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-group select:focus,
+  .form-group input[type="text"]:focus {
+    border-color: var(--soil-light);
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  .btn-primary {
+    flex: 1;
+    background: var(--soil);
+    color: var(--wheat-pale);
+    border: none;
+    border-radius: 7px;
+    padding: 0.65rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-primary:hover { background: var(--soil-mid); }
+  .btn-secondary {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 0.65rem 1.2rem;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-secondary:hover { background: var(--surface-2); }
+
+  /* ── SETTINGS MODAL ── */
+  #settings-info {
+    font-size: 0.82rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    background: var(--surface-2);
+    border-radius: 7px;
+    padding: 0.75rem;
+  }
+  #settings-info a { color: var(--rust); }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin-bottom: 1.75rem;
+    padding: 0.85rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-mid);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── SYNC BADGE ── */
+  .sync-badge {
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .sync-badge.live { background: var(--green-pale); color: var(--green); }
+  .sync-badge.offline { background: #F5E6C0; color: var(--soil-mid); }
+
+  /* ── STATS ROW ── */
+  .stats-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .stat-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-mid);
+    letter-spacing: 0.03em;
+  }
+  .stat-pill span { color: var(--soil); font-weight: 700; }
+</style>
 </head>
 <body>
-    <h1>🌱 Farm Planner</h1>
 
-    <div class="container">
-        <section>
-            <h2>Add Activity</h2>
-
-            <input type="month" id="month">
-
-            <select id="type">
-                <option value="Plant">Plant</option>
-                <option value="Harvest">Harvest</option>
-                <option value="Task">Task</option>
-            </select>
-
-            <input type="text" id="field" placeholder="Field Name">
-
-            <input type="text" id="crop" placeholder="Crop / Task">
-
-            <button onclick="addActivity()">Add</button>
-        </section>
-
-        <section>
-            <h2>Planned Activities</h2>
-            <div id="activities"></div>
-        </section>
+<div class="header-stripe"></div>
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div>
+        <div class="logo-main">⚙ The Engineers Farming</div>
+        <div class="logo-sub">FS 2026 · Season Planner</div>
+      </div>
     </div>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <span id="sync-badge" class="sync-badge offline">Offline</span>
+      <span class="header-year">2026</span>
+      <button class="btn-settings" onclick="openSettings()">⚙ GitHub Settings</button>
+    </div>
+  </div>
+</header>
 
-    <script src="script.js"></script>
+<div id="status-bar"></div>
+
+<main>
+  <div class="stats-row">
+    <div class="stat-pill">Tasks: <span id="stat-total">0</span></div>
+    <div class="stat-pill">Done: <span id="stat-done">0</span></div>
+    <div class="stat-pill">Remaining: <span id="stat-remaining">0</span></div>
+    <div class="stat-pill" id="stat-lastsync" style="margin-left:auto;font-weight:400;color:var(--text-light);">Never synced</div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--soil-light)"></div> Cultivating</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--green-light)"></div> Planting</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--wheat)"></div> Fertilizing</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--sky)"></div> Liming</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--rust-light)"></div> Harvesting</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#9C6BD4"></div> Selling</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--text-light)"></div> Other</div>
+  </div>
+
+  <div class="year-grid" id="year-grid"></div>
+</main>
+
+<!-- ADD TASK MODAL -->
+<div class="modal-overlay" id="task-modal">
+  <div class="modal">
+    <h2 id="modal-title">Add Task</h2>
+    <div class="form-group">
+      <label>Task Type *</label>
+      <select id="task-type">
+        <option value="">— select type —</option>
+        <option value="cultivating">Cultivating</option>
+        <option value="planting">Planting</option>
+        <option value="fertilizing">Fertilizing</option>
+        <option value="liming">Liming</option>
+        <option value="harvesting">Harvesting</option>
+        <option value="selling">Selling</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Field (optional)</label>
+      <input type="text" id="task-field" placeholder="e.g. Field 3, North Pasture…">
+    </div>
+    <div class="form-group">
+      <label>Crop (optional)</label>
+      <input type="text" id="task-crop" placeholder="e.g. Wheat, Canola, Barley…">
+    </div>
+    <div class="form-group">
+      <label>Notes (optional)</label>
+      <input type="text" id="task-notes" placeholder="Extra details…">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" id="modal-save-btn" onclick="saveTask()">Add Task</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal">
+    <h2>GitHub Sync Setup</h2>
+    <div id="settings-info">
+      Save your schedule to a GitHub repository so everyone can see live updates.<br><br>
+      1. Create a repo (e.g. <code>engineers-farming</code>) and put this <code>index.html</code> in it.<br>
+      2. Enable <strong>GitHub Pages</strong> on the repo (Settings → Pages).<br>
+      3. Create a <strong>Personal Access Token</strong> with <code>repo</code> scope at
+      <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a>.<br>
+      4. Each team member enters their token below (stored only in their browser).
+    </div>
+    <div class="form-group">
+      <label>GitHub Owner (username or org)</label>
+      <input type="text" id="cfg-owner" placeholder="e.g. JanDoe">
+    </div>
+    <div class="form-group">
+      <label>Repository Name</label>
+      <input type="text" id="cfg-repo" placeholder="e.g. engineers-farming">
+    </div>
+    <div class="form-group">
+      <label>Data File Path in repo</label>
+      <input type="text" id="cfg-path" placeholder="data.json" value="data.json">
+    </div>
+    <div class="form-group">
+      <label>Your Personal Access Token (stored locally)</label>
+      <input type="text" id="cfg-token" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeSettings()">Cancel</button>
+      <button class="btn-primary" onclick="saveSettings()">Save & Connect</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const MONTHS = [
+  {name:'January',  season:'Winter'},
+  {name:'February', season:'Winter'},
+  {name:'March',    season:'Spring'},
+  {name:'April',    season:'Spring'},
+  {name:'May',      season:'Spring'},
+  {name:'June',     season:'Summer'},
+  {name:'July',     season:'Summer'},
+  {name:'August',   season:'Summer'},
+  {name:'September',season:'Autumn'},
+  {name:'October',  season:'Autumn'},
+  {name:'November', season:'Autumn'},
+  {name:'December', season:'Winter'},
+];
+
+let state = { tasks: {} }; // { "0": [{id,type,field,crop,notes,done},...], ... }
+let editingTask = null; // {monthIdx, taskId}
+let addingMonth = null;
+let syncInterval = null;
+let githubSha = null; // file SHA for GitHub API updates
+
+// ── CONFIG ──
+function cfg() {
+  return {
+    owner: localStorage.getItem('gh_owner') || '',
+    repo:  localStorage.getItem('gh_repo')  || '',
+    path:  localStorage.getItem('gh_path')  || 'data.json',
+    token: localStorage.getItem('gh_token') || '',
+  };
+}
+function isConfigured() {
+  const c = cfg(); return c.owner && c.repo;
+}
+function hasToken() {
+  return !!cfg().token;
+}
+
+// ── STATUS BAR ──
+function showStatus(msg, type='', duration=3000) {
+  const bar = document.getElementById('status-bar');
+  bar.textContent = msg;
+  bar.className = 'show' + (type ? ' '+type : '');
+  if (duration) setTimeout(() => bar.className='', duration);
+}
+
+// ── RENDER ──
+function buildGrid() {
+  const grid = document.getElementById('year-grid');
+  grid.innerHTML = '';
+  MONTHS.forEach((m, i) => {
+    const card = document.createElement('div');
+    card.className = 'month-card';
+    card.innerHTML = `
+      <div class="month-header">
+        <span class="month-name">${m.name}</span>
+        <span class="month-season">${m.season}</span>
+      </div>
+      <div class="month-body">
+        <ul class="task-list" id="tlist-${i}"></ul>
+        <button class="add-task-btn" onclick="openAddTask(${i})">+ Add Task</button>
+      </div>`;
+    grid.appendChild(card);
+  });
+  renderAllTasks();
+}
+
+function renderAllTasks() {
+  let total=0, done=0;
+  MONTHS.forEach((m, i) => {
+    const ul = document.getElementById('tlist-'+i);
+    if (!ul) return;
+    ul.innerHTML = '';
+    const tasks = state.tasks[i] || [];
+    tasks.forEach(t => {
+      total++;
+      if (t.done) done++;
+      const li = document.createElement('li');
+      li.className = 'task-item' + (t.done ? ' done' : '');
+      const meta = [t.field ? '📍 '+t.field : '', t.crop ? '🌾 '+t.crop : '', t.notes || ''].filter(Boolean).join(' · ');
+      li.innerHTML = `
+        <div class="task-dot ${t.type}"></div>
+        <div class="task-content">
+          <div class="task-label">${t.type}</div>
+          ${meta ? `<div class="task-meta">${meta}</div>` : ''}
+        </div>
+        <div class="task-actions">
+          <button class="task-btn done-btn" title="${t.done?'Mark undone':'Mark done'}" onclick="toggleDone(${i},'${t.id}')">${t.done ? '↩' : '✓'}</button>
+          <button class="task-btn" title="Edit" onclick="openEditTask(${i},'${t.id}')">✎</button>
+          <button class="task-btn del-btn" title="Delete" onclick="deleteTask(${i},'${t.id}')">✕</button>
+        </div>`;
+      ul.appendChild(li);
+    });
+  });
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-remaining').textContent = total - done;
+}
+
+// ── TASK CRUD ──
+function openAddTask(monthIdx) {
+  addingMonth = monthIdx;
+  editingTask = null;
+  document.getElementById('modal-title').textContent = 'Add Task — ' + MONTHS[monthIdx].name;
+  document.getElementById('modal-save-btn').textContent = 'Add Task';
+  document.getElementById('task-type').value = '';
+  document.getElementById('task-field').value = '';
+  document.getElementById('task-crop').value = '';
+  document.getElementById('task-notes').value = '';
+  document.getElementById('task-modal').classList.add('open');
+}
+
+function openEditTask(monthIdx, taskId) {
+  const task = (state.tasks[monthIdx] || []).find(t => t.id === taskId);
+  if (!task) return;
+  editingTask = {monthIdx, taskId};
+  addingMonth = null;
+  document.getElementById('modal-title').textContent = 'Edit Task — ' + MONTHS[monthIdx].name;
+  document.getElementById('modal-save-btn').textContent = 'Save Changes';
+  document.getElementById('task-type').value = task.type;
+  document.getElementById('task-field').value = task.field || '';
+  document.getElementById('task-crop').value = task.crop || '';
+  document.getElementById('task-notes').value = task.notes || '';
+  document.getElementById('task-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('task-modal').classList.remove('open');
+  editingTask = null; addingMonth = null;
+}
+
+function saveTask() {
+  const type = document.getElementById('task-type').value;
+  if (!type) { alert('Please select a task type.'); return; }
+  const field = document.getElementById('task-field').value.trim();
+  const crop  = document.getElementById('task-crop').value.trim();
+  const notes = document.getElementById('task-notes').value.trim();
+
+  if (editingTask) {
+    const {monthIdx, taskId} = editingTask;
+    const arr = state.tasks[monthIdx] || [];
+    const t = arr.find(x => x.id === taskId);
+    if (t) { t.type=type; t.field=field; t.crop=crop; t.notes=notes; }
+  } else {
+    const i = addingMonth;
+    if (!state.tasks[i]) state.tasks[i] = [];
+    state.tasks[i].push({ id: 't'+Date.now(), type, field, crop, notes, done: false });
+  }
+
+  closeModal();
+  renderAllTasks();
+  autoSave();
+}
+
+function toggleDone(monthIdx, taskId) {
+  const arr = state.tasks[monthIdx] || [];
+  const t = arr.find(x => x.id === taskId);
+  if (t) t.done = !t.done;
+  renderAllTasks();
+  autoSave();
+}
+
+function deleteTask(monthIdx, taskId) {
+  if (!confirm('Delete this task?')) return;
+  state.tasks[monthIdx] = (state.tasks[monthIdx] || []).filter(t => t.id !== taskId);
+  renderAllTasks();
+  autoSave();
+}
+
+// ── GITHUB API ──
+async function ghFetch(method, urlPath, body) {
+  const c = cfg();
+  const url = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${c.path}`;
+  const headers = { 'Content-Type': 'application/json' };
+  if (c.token) headers['Authorization'] = 'token ' + c.token;
+  const opts = { method, headers };
+  if (body) opts.body = JSON.stringify(body);
+  return fetch(url, opts);
+}
+
+async function loadFromGitHub() {
+  if (!isConfigured()) return;
+  try {
+    const res = await ghFetch('GET');
+    if (res.status === 404) {
+      // File doesn't exist yet — start fresh
+      githubSha = null;
+      return;
+    }
+    if (!res.ok) throw new Error('HTTP '+res.status);
+    const data = await res.json();
+    githubSha = data.sha;
+    const decoded = JSON.parse(atob(data.content.replace(/\n/g,'')));
+    state = decoded;
+    renderAllTasks();
+    setSyncBadge(true);
+    const now = new Date().toLocaleTimeString();
+    document.getElementById('stat-lastsync').textContent = 'Synced ' + now;
+  } catch(e) {
+    console.error('Load error', e);
+  }
+}
+
+async function saveToGitHub() {
+  if (!isConfigured() || !hasToken()) return false;
+  try {
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(state, null, 2))));
+    const body = {
+      message: '🚜 Update farm schedule',
+      content,
+    };
+    if (githubSha) body.sha = githubSha;
+    const res = await ghFetch('PUT', null, body);
+    if (!res.ok) {
+      const err = await res.json();
+      // Conflict: file was updated by someone else — reload first
+      if (res.status === 409 || (err.message||'').includes('sha')) {
+        showStatus('⚡ Conflict — reloading latest version…', 'warn', 4000);
+        await loadFromGitHub();
+        return false;
+      }
+      throw new Error(err.message || 'HTTP '+res.status);
+    }
+    const data = await res.json();
+    githubSha = data.content.sha;
+    setSyncBadge(true);
+    const now = new Date().toLocaleTimeString();
+    document.getElementById('stat-lastsync').textContent = 'Saved ' + now;
+    showStatus('✓ Saved to GitHub', '', 2500);
+    return true;
+  } catch(e) {
+    showStatus('✗ Save failed: ' + e.message, 'error', 5000);
+    return false;
+  }
+}
+
+function setSyncBadge(live) {
+  const b = document.getElementById('sync-badge');
+  b.textContent = live ? 'Live' : 'Offline';
+  b.className = 'sync-badge ' + (live ? 'live' : 'offline');
+}
+
+let saveDebounce = null;
+function autoSave() {
+  if (!isConfigured() || !hasToken()) {
+    // save to localStorage as fallback
+    localStorage.setItem('ef_state', JSON.stringify(state));
+    return;
+  }
+  clearTimeout(saveDebounce);
+  saveDebounce = setTimeout(() => saveToGitHub(), 800);
+}
+
+function startPolling() {
+  if (syncInterval) clearInterval(syncInterval);
+  if (!isConfigured()) return;
+  syncInterval = setInterval(async () => {
+    // silent background poll
+    try {
+      const c = cfg();
+      const url = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${c.path}`;
+      const headers = {};
+      if (c.token) headers['Authorization'] = 'token ' + c.token;
+      const res = await fetch(url, {headers});
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data.sha !== githubSha) {
+        // Someone else updated!
+        githubSha = data.sha;
+        const decoded = JSON.parse(atob(data.content.replace(/\n/g,'')));
+        state = decoded;
+        renderAllTasks();
+        setSyncBadge(true);
+        const now = new Date().toLocaleTimeString();
+        document.getElementById('stat-lastsync').textContent = 'Updated ' + now;
+        showStatus('⚡ Schedule updated by a teammate!', '', 3500);
+      }
+    } catch(e) { /* silent */ }
+  }, 12000); // every 12s
+}
+
+// ── SETTINGS ──
+function openSettings() {
+  const c = cfg();
+  document.getElementById('cfg-owner').value = c.owner;
+  document.getElementById('cfg-repo').value = c.repo;
+  document.getElementById('cfg-path').value = c.path || 'data.json';
+  document.getElementById('cfg-token').value = c.token;
+  document.getElementById('settings-modal').classList.add('open');
+}
+function closeSettings() {
+  document.getElementById('settings-modal').classList.remove('open');
+}
+async function saveSettings() {
+  const owner = document.getElementById('cfg-owner').value.trim();
+  const repo  = document.getElementById('cfg-repo').value.trim();
+  const path  = document.getElementById('cfg-path').value.trim() || 'data.json';
+  const token = document.getElementById('cfg-token').value.trim();
+  if (!owner || !repo) { alert('Owner and repo name are required.'); return; }
+  localStorage.setItem('gh_owner', owner);
+  localStorage.setItem('gh_repo', repo);
+  localStorage.setItem('gh_path', path);
+  localStorage.setItem('gh_token', token);
+  closeSettings();
+  showStatus('⚙ Connecting to GitHub…', 'warn', 0);
+  await loadFromGitHub();
+  startPolling();
+  showStatus('✓ Connected to GitHub!', '', 3000);
+}
+
+// ── INIT ──
+window.addEventListener('click', e => {
+  if (e.target === document.getElementById('task-modal')) closeModal();
+  if (e.target === document.getElementById('settings-modal')) closeSettings();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); closeSettings(); }
+});
+
+(async function init() {
+  // Try localStorage fallback first
+  const local = localStorage.getItem('ef_state');
+  if (local) {
+    try { state = JSON.parse(local); } catch(e) {}
+  }
+  buildGrid();
+  if (isConfigured()) {
+    await loadFromGitHub();
+    startPolling();
+  } else {
+    setSyncBadge(false);
+    showStatus('⚙ Set up GitHub sync to share with your team!', 'warn', 8000);
+  }
+})();
+</script>
 </body>
 </html>
