@@ -2,798 +2,549 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#2C1A0E">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Eng. Farming">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Engineers Farming</title>
-<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --soil:        #2C1A0E;
-    --soil-mid:    #4A2C14;
-    --soil-light:  #7A4E2D;
-    --wheat:       #D4A843;
+    --soil: #2C1A0E;
+    --soil-mid: #4A2C14;
+    --soil-light: #7A4E2D;
+    --wheat: #D4A843;
     --wheat-light: #E8C877;
-    --wheat-pale:  #F5E6C0;
-    --green:       #3D6B2E;
-    --green-l:     #5A9645;
-    --green-pale:  #C8E6B8;
-    --sky:         #8BBDD4;
-    --rust:        #B54A1F;
-    --rust-l:      #E07040;
-    --purple:      #9C6BD4;
-    --cream:       #F9F3E8;
-    --surface:     #FFFCF5;
-    --surface-2:   #F0E8D4;
-    --border:      rgba(42,26,14,0.13);
-    --text:        #1A0F07;
-    --text-mid:    #4A3020;
-    --text-light:  #7A6050;
-
-    --safe-top:    env(safe-area-inset-top, 0px);
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --wheat-pale: #F5E6C0;
+    --green: #3D6B2E;
+    --green-light: #5A9645;
+    --green-pale: #C8E6B8;
+    --sky: #8BBDD4;
+    --sky-pale: #D6EDF7;
+    --rust: #B54A1F;
+    --rust-light: #E07040;
+    --cream: #F9F3E8;
+    --text: #1A0F07;
+    --text-mid: #4A3020;
+    --text-light: #7A6050;
+    --border: rgba(42,26,14,0.15);
+    --surface: #FFFCF5;
+    --surface-2: #F5EDD8;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  html, body {
-    height: 100%;
-    overflow: hidden;
+  body {
     font-family: 'Barlow', sans-serif;
-    background: var(--soil);
-    color: var(--text);
-    overscroll-behavior: none;
-  }
-
-  /* ── APP SHELL ── */
-  #app {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    height: 100dvh;
     background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
   }
 
-  /* ── TOP BAR ── */
-  #topbar {
+  /* ── HEADER ── */
+  header {
     background: var(--soil);
-    padding: calc(var(--safe-top) + 0.6rem) 1rem 0.6rem;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .header-stripe {
+    background: var(--wheat);
+    height: 4px;
+  }
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-shrink: 0;
-    position: relative;
-    z-index: 10;
+    gap: 1rem;
   }
-  .topbar-logo {
+  .logo {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .logo-main {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 900;
-    font-size: 1.25rem;
+    font-size: 2rem;
     color: var(--wheat);
     letter-spacing: -0.01em;
     line-height: 1;
   }
-  .topbar-sub {
+  .logo-sub {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.7rem;
+    font-weight: 400;
+    font-size: 1rem;
     color: var(--wheat-light);
-    opacity: 0.65;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
   }
-  .topbar-right { display: flex; align-items: center; gap: 0.5rem; }
-  #sync-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--rust-l);
-    transition: background 0.3s;
-  }
-  #sync-dot.live { background: var(--green-l); }
-  .topbar-btn {
-    background: none; border: none;
-    color: var(--wheat-light);
-    font-size: 1.3rem;
-    cursor: pointer;
-    padding: 4px 6px;
-    border-radius: 6px;
-    line-height: 1;
-  }
-
-  /* ── STATUS TOAST ── */
-  #toast {
-    position: fixed;
-    bottom: calc(var(--safe-bottom) + 68px);
-    left: 50%; transform: translateX(-50%) translateY(20px);
-    background: var(--soil);
+  .header-year {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
     color: var(--wheat-pale);
-    font-size: 0.82rem;
-    font-weight: 500;
-    padding: 0.5rem 1.1rem;
-    border-radius: 20px;
-    white-space: nowrap;
-    opacity: 0;
-    transition: opacity 0.25s, transform 0.25s;
-    z-index: 200;
-    pointer-events: none;
-    max-width: calc(100% - 2rem);
-    text-align: center;
-  }
-  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-  #toast.success { background: var(--green); }
-  #toast.error { background: var(--rust); }
-  #toast.warn { background: var(--wheat); color: var(--soil); }
-
-  /* ── VIEWS ── */
-  #views {
-    flex: 1;
-    overflow: hidden;
-    position: relative;
-  }
-  .view { display: none; height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-  .view.active { display: block; }
-
-  /* ── OVERVIEW (year grid) ── */
-  #view-overview {
-    background: var(--cream);
-    padding: 0.75rem;
-  }
-  .stats-strip {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-  }
-  .stat-chip {
-    flex: 1;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0.45rem 0.5rem;
-    text-align: center;
-  }
-  .stat-chip-val {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--soil);
-    line-height: 1;
-  }
-  .stat-chip-lbl {
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-light);
-    margin-top: 2px;
-  }
-
-  .month-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.6rem;
-  }
-
-  .month-tile {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.12s, box-shadow 0.12s;
-    active-scale: 0.97;
-  }
-  .month-tile:active { transform: scale(0.97); }
-
-  .tile-header {
-    background: var(--soil-mid);
-    padding: 0.45rem 0.7rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .tile-name {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: var(--wheat);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-  .tile-count {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--wheat-light);
-    opacity: 0.7;
-  }
-  .tile-body {
-    padding: 0.5rem 0.7rem;
-    min-height: 52px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    align-content: flex-start;
-  }
-  .tile-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .tile-dot.done { opacity: 0.35; }
-  .tile-empty {
-    font-size: 0.72rem;
-    color: var(--text-light);
-    font-style: italic;
-    align-self: center;
-  }
-
-  /* ── MONTH DETAIL VIEW ── */
-  #view-month {
-    background: var(--cream);
-  }
-  .month-detail-header {
-    background: var(--soil);
-    padding: 1rem 1rem 0.8rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    position: sticky;
-    top: 0;
-    z-index: 5;
-  }
-  .back-btn {
-    background: none; border: none;
-    color: var(--wheat-light);
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 2px 4px;
-    line-height: 1;
-  }
-  .month-detail-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 900;
-    font-size: 1.5rem;
-    color: var(--wheat);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    flex: 1;
-  }
-  .month-detail-season {
-    font-size: 0.72rem;
-    color: var(--wheat-light);
-    opacity: 0.65;
+    opacity: 0.6;
     letter-spacing: 0.1em;
-    text-transform: uppercase;
   }
-  .add-fab {
-    position: fixed;
-    bottom: calc(var(--safe-bottom) + 72px);
-    right: 1rem;
-    width: 52px; height: 52px;
-    border-radius: 50%;
-    background: var(--wheat);
-    border: none;
-    font-size: 1.6rem;
-    color: var(--soil);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 16px rgba(42,26,14,0.25);
-    z-index: 50;
-    transition: transform 0.12s, background 0.12s;
-    line-height: 1;
-  }
-  .add-fab:active { transform: scale(0.93); }
-
-  .task-list-detail {
-    list-style: none;
-    padding: 0.75rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.55rem;
-    padding-bottom: 5rem;
-  }
-
-  .task-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 0.7rem 0.85rem;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.6rem;
-    transition: opacity 0.2s;
-  }
-  .task-card.done { opacity: 0.5; }
-  .task-card.done .task-card-type { text-decoration: line-through; }
-
-  .task-type-badge {
-    width: 36px; height: 36px;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.1rem;
-    flex-shrink: 0;
-  }
-  .task-type-badge.cultivating { background: #EDD8C5; }
-  .task-type-badge.planting    { background: var(--green-pale); }
-  .task-type-badge.fertilizing { background: #F5EBC0; }
-  .task-type-badge.liming      { background: #D6EDF7; }
-  .task-type-badge.harvesting  { background: #F5D9C8; }
-  .task-type-badge.selling     { background: #E8D8F5; }
-  .task-type-badge.other       { background: var(--surface-2); }
-
-  .task-card-info { flex: 1; min-width: 0; }
-  .task-card-type {
-    font-size: 0.82rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text);
-  }
-  .task-card-meta {
-    font-size: 0.78rem;
-    color: var(--text-light);
-    margin-top: 2px;
-    line-height: 1.4;
-  }
-  .task-card-actions {
-    display: flex; gap: 2px; flex-shrink: 0;
-  }
-  .card-btn {
-    background: none; border: none;
-    font-size: 1.1rem;
-    padding: 5px;
-    border-radius: 6px;
-    cursor: pointer;
-    color: var(--text-light);
-    line-height: 1;
-    transition: background 0.15s, color 0.15s;
-  }
-  .card-btn:active { background: var(--surface-2); }
-
-  .empty-month {
-    text-align: center;
-    padding: 3rem 2rem;
-    color: var(--text-light);
-  }
-  .empty-month-icon { font-size: 3rem; margin-bottom: 0.75rem; }
-  .empty-month-text { font-size: 0.9rem; line-height: 1.6; }
-
-  /* ── BOTTOM NAV ── */
-  #bottom-nav {
-    background: var(--soil);
-    display: flex;
-    padding: 0 0 var(--safe-bottom);
-    flex-shrink: 0;
-    border-top: 1px solid rgba(255,255,255,0.05);
-  }
-  .nav-btn {
-    flex: 1;
-    background: none; border: none;
-    color: var(--soil-light);
-    padding: 0.55rem 0;
-    cursor: pointer;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 3px;
-    font-family: 'Barlow', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    transition: color 0.15s;
-    line-height: 1;
-  }
-  .nav-btn.active { color: var(--wheat); }
-  .nav-btn-icon { font-size: 1.3rem; line-height: 1; }
-
-  /* ── MONTH SWIPE NAV ── */
-  .month-nav-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
+  .btn-settings {
     background: var(--soil-mid);
-  }
-  .month-nav-btn {
-    background: none; border: none;
+    border: 1px solid var(--soil-light);
     color: var(--wheat-light);
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 4px 10px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.45rem 1rem;
     border-radius: 6px;
-    line-height: 1;
+    cursor: pointer;
+    transition: background 0.15s;
   }
-  .month-nav-btn:disabled { opacity: 0.25; }
-  .month-nav-dots {
-    display: flex; gap: 5px;
-  }
-  .month-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--soil-light);
-    transition: background 0.2s, transform 0.2s;
-  }
-  .month-dot.cur { background: var(--wheat); transform: scale(1.3); }
+  .btn-settings:hover { background: var(--soil-light); }
 
-  /* ── MODAL SHEET ── */
-  .sheet-overlay {
-    position: fixed; inset: 0;
-    background: rgba(26,15,7,0.6);
-    z-index: 100;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.25s;
+  /* ── STATUS BAR ── */
+  #status-bar {
+    background: var(--green);
+    color: #fff;
+    font-size: 0.8rem;
+    text-align: center;
+    padding: 0.3rem 1rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    display: none;
   }
-  .sheet-overlay.open { opacity: 1; pointer-events: all; }
+  #status-bar.show { display: block; }
+  #status-bar.error { background: var(--rust); }
+  #status-bar.warn { background: var(--wheat); color: var(--soil); }
 
-  .sheet {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: var(--surface);
-    border-radius: 18px 18px 0 0;
-    padding: 0 1rem calc(var(--safe-bottom) + 1rem);
-    z-index: 101;
-    transform: translateY(100%);
-    transition: transform 0.3s cubic-bezier(0.34, 1.1, 0.64, 1);
-    max-height: 92dvh;
-    overflow-y: auto;
-  }
-  .sheet-overlay.open .sheet { transform: translateY(0); }
-
-  .sheet-handle {
-    width: 36px; height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    margin: 0.75rem auto 1.25rem;
-  }
-  .sheet-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 1.2rem;
-    color: var(--soil);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 1.25rem;
+  /* ── MAIN LAYOUT ── */
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
   }
 
-  /* TYPE SELECTOR */
-  .type-grid {
+  /* ── YEAR GRID ── */
+  .year-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 0.5rem;
-    margin-bottom: 1.25rem;
+    gap: 1.25rem;
   }
-  .type-option {
-    background: var(--surface-2);
-    border: 2px solid transparent;
+  @media (max-width: 900px) { .year-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 500px) { .year-grid { grid-template-columns: 1fr; } }
+
+  /* ── MONTH CARD ── */
+  .month-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 10px;
-    padding: 0.5rem 0.25rem;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
-    display: flex; flex-direction: column;
-    align-items: center; gap: 4px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
   }
-  .type-option.selected {
-    border-color: var(--soil-mid);
-    background: var(--wheat-pale);
+  .month-card:hover { box-shadow: 0 4px 20px rgba(42,26,14,0.12); }
+
+  .month-header {
+    background: var(--soil-mid);
+    padding: 0.65rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
-  .type-option-icon { font-size: 1.3rem; line-height: 1; }
-  .type-option-lbl {
-    font-size: 0.6rem;
-    font-weight: 600;
+  .month-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--wheat);
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--text-mid);
-    line-height: 1.2;
+  }
+  .month-season {
+    font-size: 0.7rem;
+    color: var(--wheat-light);
+    opacity: 0.7;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
   }
 
-  .field-group { margin-bottom: 0.9rem; }
-  .field-group label {
+  .month-body {
+    padding: 0.75rem;
+    min-height: 80px;
+  }
+
+  /* ── TASK ITEMS ── */
+  .task-list { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 0.6rem; }
+
+  .task-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.5rem 0.65rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    position: relative;
+  }
+  .task-item.done { opacity: 0.55; }
+  .task-item.done .task-label { text-decoration: line-through; }
+
+  .task-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .task-dot.cultivating { background: var(--soil-light); }
+  .task-dot.planting    { background: var(--green-light); }
+  .task-dot.fertilizing { background: var(--wheat); }
+  .task-dot.liming      { background: var(--sky); }
+  .task-dot.harvesting  { background: var(--rust-light); }
+  .task-dot.selling     { background: #9C6BD4; }
+  .task-dot.other       { background: var(--text-light); }
+
+  .task-content { flex: 1; min-width: 0; }
+  .task-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .task-meta {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .task-actions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .task-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-light);
+    font-size: 0.85rem;
+    padding: 2px 4px;
+    border-radius: 4px;
+    line-height: 1;
+    transition: color 0.15s, background 0.15s;
+  }
+  .task-btn:hover { background: var(--border); color: var(--text); }
+  .task-btn.done-btn:hover { color: var(--green); }
+  .task-btn.del-btn:hover { color: var(--rust); }
+
+  /* ── ADD TASK BTN ── */
+  .add-task-btn {
+    width: 100%;
+    background: none;
+    border: 1px dashed rgba(42,26,14,0.2);
+    border-radius: 6px;
+    padding: 0.4rem;
+    color: var(--text-light);
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.03em;
+  }
+  .add-task-btn:hover {
+    background: var(--surface-2);
+    border-color: var(--soil-light);
+    color: var(--text);
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,15,7,0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 1.75rem;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 20px 60px rgba(26,15,7,0.3);
+    transform: translateY(12px);
+    transition: transform 0.2s;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+
+  .modal h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--soil);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 1.25rem;
+  }
+
+  .form-group { margin-bottom: 1rem; }
+  .form-group label {
     display: block;
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--text-light);
     margin-bottom: 0.35rem;
   }
-  .field-group input {
-    width: 100%;
-    border: 1px solid var(--border);
-    background: var(--cream);
-    border-radius: 8px;
-    padding: 0.65rem 0.85rem;
-    font-family: 'Barlow', sans-serif;
-    font-size: 1rem;
-    color: var(--text);
-    outline: none;
-    -webkit-appearance: none;
-  }
-  .field-group input:focus { border-color: var(--soil-light); }
-
-  .sheet-save-btn {
-    width: 100%;
-    background: var(--soil);
-    color: var(--wheat-pale);
-    border: none;
-    border-radius: 10px;
-    padding: 0.85rem;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    cursor: pointer;
-    margin-top: 0.5rem;
-  }
-
-  /* ── SETTINGS VIEW ── */
-  #view-settings {
-    background: var(--cream);
-    padding: 1rem;
-    padding-bottom: 5rem;
-  }
-  .settings-section {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 1rem;
-  }
-  .settings-section-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-light);
-    padding: 0.65rem 1rem;
-    background: var(--surface-2);
-    border-bottom: 1px solid var(--border);
-  }
-  .settings-field {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .settings-field:last-child { border-bottom: none; }
-  .settings-field label {
-    display: block;
-    font-size: 0.72rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-light);
-    margin-bottom: 0.3rem;
-  }
-  .settings-field input {
+  .form-group select,
+  .form-group input[type="text"] {
     width: 100%;
     border: 1px solid var(--border);
     background: var(--cream);
     border-radius: 7px;
     padding: 0.55rem 0.75rem;
     font-family: 'Barlow', sans-serif;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     color: var(--text);
     outline: none;
-    -webkit-appearance: none;
+    transition: border-color 0.15s;
   }
-  .settings-field input:focus { border-color: var(--soil-light); }
-  .settings-connect-btn {
-    width: 100%;
-    background: var(--green);
-    color: #fff;
+  .form-group select:focus,
+  .form-group input[type="text"]:focus {
+    border-color: var(--soil-light);
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  .btn-primary {
+    flex: 1;
+    background: var(--soil);
+    color: var(--wheat-pale);
     border: none;
-    border-radius: 10px;
-    padding: 0.8rem;
+    border-radius: 7px;
+    padding: 0.65rem;
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 1.05rem;
+    font-size: 1rem;
     font-weight: 700;
-    letter-spacing: 0.07em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     cursor: pointer;
-    margin-top: 0.5rem;
+    transition: background 0.15s;
   }
-  .settings-info {
+  .btn-primary:hover { background: var(--soil-mid); }
+  .btn-secondary {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 0.65rem 1.2rem;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-secondary:hover { background: var(--surface-2); }
+
+  /* ── SETTINGS MODAL ── */
+  #settings-info {
+    font-size: 0.82rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    background: var(--surface-2);
+    border-radius: 7px;
+    padding: 0.75rem;
+  }
+  #settings-info a { color: var(--rust); }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin-bottom: 1.75rem;
+    padding: 0.85rem 1rem;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 0.9rem 1rem;
-    font-size: 0.82rem;
-    color: var(--text-light);
-    line-height: 1.7;
-    margin-bottom: 1rem;
+    border-radius: 8px;
   }
-  .settings-info strong { color: var(--text-mid); }
-  .settings-info a { color: var(--rust); }
-
-  /* ── LEGEND IN SETTINGS ── */
-  .legend-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0 0;
-  }
-  .legend-row {
-    display: flex; align-items: center; gap: 0.6rem;
-    padding: 0.6rem 1rem;
-    border-bottom: 1px solid var(--border);
-    font-size: 0.82rem;
-    color: var(--text-mid);
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
     font-weight: 500;
+    color: var(--text-mid);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
   }
-  .legend-row:nth-child(odd):last-child { grid-column: span 2; }
   .legend-dot {
     width: 10px; height: 10px;
-    border-radius: 50%; flex-shrink: 0;
+    border-radius: 50%;
+    flex-shrink: 0;
   }
 
-  /* Swipe hint */
-  .swipe-hint {
-    text-align: center;
+  /* ── SYNC BADGE ── */
+  .sync-badge {
     font-size: 0.72rem;
-    color: var(--text-light);
-    padding: 0.4rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .sync-badge.live { background: var(--green-pale); color: var(--green); }
+  .sync-badge.offline { background: #F5E6C0; color: var(--soil-mid); }
+
+  /* ── STATS ROW ── */
+  .stats-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .stat-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-mid);
     letter-spacing: 0.03em;
   }
+  .stat-pill span { color: var(--soil); font-weight: 700; }
 </style>
 </head>
 <body>
-<div id="app">
 
-  <!-- TOP BAR -->
-  <div id="topbar">
-    <div>
-      <div class="topbar-logo">⚙ The Engineers Farming</div>
-      <div class="topbar-sub">FS 2026 · Season Planner</div>
+<div class="header-stripe"></div>
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div>
+        <div class="logo-main">⚙ The Engineers Farming</div>
+        <div class="logo-sub">FS 2026 · Season Planner</div>
+      </div>
     </div>
-    <div class="topbar-right">
-      <div id="sync-dot"></div>
-      <button class="topbar-btn" onclick="showView('settings')" title="Settings">⚙</button>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <span id="sync-badge" class="sync-badge offline">Offline</span>
+      <span class="header-year">2026</span>
+      <button class="btn-settings" onclick="openSettings()">⚙ GitHub Settings</button>
     </div>
   </div>
+</header>
 
-  <!-- VIEWS -->
-  <div id="views">
+<div id="status-bar"></div>
 
-    <!-- OVERVIEW -->
-    <div class="view active" id="view-overview">
-      <div class="stats-strip" id="stats-strip" style="padding:0.75rem 0.75rem 0;">
-        <div class="stat-chip"><div class="stat-chip-val" id="s-total">0</div><div class="stat-chip-lbl">Tasks</div></div>
-        <div class="stat-chip"><div class="stat-chip-val" id="s-done">0</div><div class="stat-chip-lbl">Done</div></div>
-        <div class="stat-chip"><div class="stat-chip-val" id="s-rem">0</div><div class="stat-chip-lbl">Left</div></div>
-      </div>
-      <div class="month-grid" id="month-grid" style="padding:0.75rem;"></div>
-    </div>
-
-    <!-- MONTH DETAIL -->
-    <div class="view" id="view-month">
-      <div class="month-detail-header" id="month-detail-header">
-        <button class="back-btn" onclick="showView('overview')">‹</button>
-        <div style="flex:1">
-          <div class="month-detail-title" id="month-detail-title">January</div>
-        </div>
-        <div class="month-detail-season" id="month-detail-season">Winter</div>
-      </div>
-      <div class="month-nav-row">
-        <button class="month-nav-btn" id="prev-month-btn" onclick="navigateMonth(-1)">‹</button>
-        <div class="month-nav-dots" id="month-nav-dots"></div>
-        <button class="month-nav-btn" id="next-month-btn" onclick="navigateMonth(1)">›</button>
-      </div>
-      <ul class="task-list-detail" id="task-list-detail"></ul>
-      <button class="add-fab" id="add-fab" onclick="openAddSheet()">+</button>
-    </div>
-
-    <!-- SETTINGS -->
-    <div class="view" id="view-settings">
-      <div class="settings-info">
-        <strong>How live sync works:</strong><br>
-        This app saves your farming schedule to a GitHub repository. Everyone opens the same URL and edits are shared in real time (every 12 seconds).<br><br>
-        1. Create a GitHub repo and enable <strong>GitHub Pages</strong>.<br>
-        2. Upload these files to the repo root.<br>
-        3. Get a <strong>Personal Access Token</strong> with <code>repo</code> scope at <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a>.<br>
-        4. Each team member enters their own token below.
-      </div>
-      <div class="settings-section">
-        <div class="settings-section-title">GitHub Connection</div>
-        <div class="settings-field">
-          <label>Owner (username or org)</label>
-          <input type="text" id="cfg-owner" placeholder="e.g. JanDoe" autocomplete="off" autocorrect="off" autocapitalize="none">
-        </div>
-        <div class="settings-field">
-          <label>Repository Name</label>
-          <input type="text" id="cfg-repo" placeholder="e.g. engineers-farming" autocomplete="off" autocorrect="off" autocapitalize="none">
-        </div>
-        <div class="settings-field">
-          <label>Data file path</label>
-          <input type="text" id="cfg-path" placeholder="data.json" value="data.json" autocomplete="off" autocorrect="off">
-        </div>
-        <div class="settings-field">
-          <label>Your Personal Access Token</label>
-          <input type="text" id="cfg-token" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
-        </div>
-      </div>
-      <button class="settings-connect-btn" onclick="saveSettings()">✓ Save &amp; Connect</button>
-
-      <br>
-      <div class="settings-section" style="margin-top:1rem;">
-        <div class="settings-section-title">Task Legend</div>
-        <div class="legend-grid">
-          <div class="legend-row"><div class="legend-dot" style="background:#7A4E2D"></div>Cultivating</div>
-          <div class="legend-row"><div class="legend-dot" style="background:#5A9645"></div>Planting</div>
-          <div class="legend-row"><div class="legend-dot" style="background:#D4A843"></div>Fertilizing</div>
-          <div class="legend-row"><div class="legend-dot" style="background:#8BBDD4"></div>Liming</div>
-          <div class="legend-row"><div class="legend-dot" style="background:#E07040"></div>Harvesting</div>
-          <div class="legend-row"><div class="legend-dot" style="background:#9C6BD4"></div>Selling</div>
-          <div class="legend-row"><div class="legend-dot" style="background:#7A6050"></div>Other</div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /views -->
-
-  <!-- BOTTOM NAV -->
-  <div id="bottom-nav">
-    <button class="nav-btn active" id="nav-overview" onclick="showView('overview')">
-      <span class="nav-btn-icon">📅</span>Overview
-    </button>
-    <button class="nav-btn" id="nav-settings" onclick="showView('settings')">
-      <span class="nav-btn-icon">⚙</span>Settings
-    </button>
+<main>
+  <div class="stats-row">
+    <div class="stat-pill">Tasks: <span id="stat-total">0</span></div>
+    <div class="stat-pill">Done: <span id="stat-done">0</span></div>
+    <div class="stat-pill">Remaining: <span id="stat-remaining">0</span></div>
+    <div class="stat-pill" id="stat-lastsync" style="margin-left:auto;font-weight:400;color:var(--text-light);">Never synced</div>
   </div>
-</div>
 
-<!-- ADD / EDIT SHEET -->
-<div class="sheet-overlay" id="task-sheet">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title" id="sheet-title">Add Task</div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--soil-light)"></div> Cultivating</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--green-light)"></div> Planting</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--wheat)"></div> Fertilizing</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--sky)"></div> Liming</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--rust-light)"></div> Harvesting</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#9C6BD4"></div> Selling</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--text-light)"></div> Other</div>
+  </div>
 
-    <div class="type-grid" id="type-grid">
-      <div class="type-option" data-type="cultivating" onclick="selectType('cultivating')">
-        <div class="type-option-icon">🚜</div><div class="type-option-lbl">Cultivating</div>
-      </div>
-      <div class="type-option" data-type="planting" onclick="selectType('planting')">
-        <div class="type-option-icon">🌱</div><div class="type-option-lbl">Planting</div>
-      </div>
-      <div class="type-option" data-type="fertilizing" onclick="selectType('fertilizing')">
-        <div class="type-option-icon">💧</div><div class="type-option-lbl">Fertilizing</div>
-      </div>
-      <div class="type-option" data-type="liming" onclick="selectType('liming')">
-        <div class="type-option-icon">⬜</div><div class="type-option-lbl">Liming</div>
-      </div>
-      <div class="type-option" data-type="harvesting" onclick="selectType('harvesting')">
-        <div class="type-option-icon">🌾</div><div class="type-option-lbl">Harvesting</div>
-      </div>
-      <div class="type-option" data-type="selling" onclick="selectType('selling')">
-        <div class="type-option-icon">💰</div><div class="type-option-lbl">Selling</div>
-      </div>
-      <div class="type-option" data-type="other" onclick="selectType('other')">
-        <div class="type-option-icon">📋</div><div class="type-option-lbl">Other</div>
-      </div>
+  <div class="year-grid" id="year-grid"></div>
+</main>
+
+<!-- ADD TASK MODAL -->
+<div class="modal-overlay" id="task-modal">
+  <div class="modal">
+    <h2 id="modal-title">Add Task</h2>
+    <div class="form-group">
+      <label>Task Type *</label>
+      <select id="task-type">
+        <option value="">— select type —</option>
+        <option value="cultivating">Cultivating</option>
+        <option value="planting">Planting</option>
+        <option value="fertilizing">Fertilizing</option>
+        <option value="liming">Liming</option>
+        <option value="harvesting">Harvesting</option>
+        <option value="selling">Selling</option>
+        <option value="other">Other</option>
+      </select>
     </div>
-
-    <div class="field-group">
+    <div class="form-group">
       <label>Field (optional)</label>
-      <input type="text" id="sh-field" placeholder="e.g. Field 3, North Pasture…">
+      <input type="text" id="task-field" placeholder="e.g. Field 3, North Pasture…">
     </div>
-    <div class="field-group">
+    <div class="form-group">
       <label>Crop (optional)</label>
-      <input type="text" id="sh-crop" placeholder="e.g. Wheat, Canola, Barley…">
+      <input type="text" id="task-crop" placeholder="e.g. Wheat, Canola, Barley…">
     </div>
-    <div class="field-group">
+    <div class="form-group">
       <label>Notes (optional)</label>
-      <input type="text" id="sh-notes" placeholder="Extra details…">
+      <input type="text" id="task-notes" placeholder="Extra details…">
     </div>
-
-    <button class="sheet-save-btn" id="sheet-save-btn" onclick="saveTask()">Add Task</button>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" id="modal-save-btn" onclick="saveTask()">Add Task</button>
+    </div>
   </div>
 </div>
 
-<!-- TOAST -->
-<div id="toast"></div>
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal">
+    <h2>GitHub Sync Setup</h2>
+    <div id="settings-info">
+      Save your schedule to a GitHub repository so everyone can see live updates.<br><br>
+      1. Create a repo (e.g. <code>engineers-farming</code>) and put this <code>index.html</code> in it.<br>
+      2. Enable <strong>GitHub Pages</strong> on the repo (Settings → Pages).<br>
+      3. Create a <strong>Personal Access Token</strong> with <code>repo</code> scope at
+      <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a>.<br>
+      4. Each team member enters their token below (stored only in their browser).
+    </div>
+    <div class="form-group">
+      <label>GitHub Owner (username or org)</label>
+      <input type="text" id="cfg-owner" placeholder="e.g. JanDoe">
+    </div>
+    <div class="form-group">
+      <label>Repository Name</label>
+      <input type="text" id="cfg-repo" placeholder="e.g. engineers-farming">
+    </div>
+    <div class="form-group">
+      <label>Data File Path in repo</label>
+      <input type="text" id="cfg-path" placeholder="data.json" value="data.json">
+    </div>
+    <div class="form-group">
+      <label>Your Personal Access Token (stored locally)</label>
+      <input type="text" id="cfg-token" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeSettings()">Cancel</button>
+      <button class="btn-primary" onclick="saveSettings()">Save & Connect</button>
+    </div>
+  </div>
+</div>
 
 <script>
 const MONTHS = [
@@ -811,242 +562,166 @@ const MONTHS = [
   {name:'December', season:'Winter'},
 ];
 
-const TYPE_COLORS = {
-  cultivating:'#7A4E2D', planting:'#5A9645', fertilizing:'#D4A843',
-  liming:'#8BBDD4', harvesting:'#E07040', selling:'#9C6BD4', other:'#7A6050'
-};
-const TYPE_EMOJI = {
-  cultivating:'🚜', planting:'🌱', fertilizing:'💧',
-  liming:'⬜', harvesting:'🌾', selling:'💰', other:'📋'
-};
-
-let state = { tasks: {} };
-let currentMonth = 0;
-let editingTask = null;
-let selectedType = '';
-let githubSha = null;
+let state = { tasks: {} }; // { "0": [{id,type,field,crop,notes,done},...], ... }
+let editingTask = null; // {monthIdx, taskId}
+let addingMonth = null;
 let syncInterval = null;
-let saveDebounce = null;
+let githubSha = null; // file SHA for GitHub API updates
 
 // ── CONFIG ──
-const cfg = () => ({
-  owner: localStorage.getItem('gh_owner')||'',
-  repo:  localStorage.getItem('gh_repo') ||'',
-  path:  localStorage.getItem('gh_path') ||'data.json',
-  token: localStorage.getItem('gh_token')||'',
-});
-const isConfigured = () => { const c=cfg(); return c.owner&&c.repo; };
-const hasToken = () => !!cfg().token;
-
-// ── TOAST ──
-let toastTimer;
-function toast(msg, type='', dur=3000) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'show ' + type;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.className='', dur);
+function cfg() {
+  return {
+    owner: localStorage.getItem('gh_owner') || '',
+    repo:  localStorage.getItem('gh_repo')  || '',
+    path:  localStorage.getItem('gh_path')  || 'data.json',
+    token: localStorage.getItem('gh_token') || '',
+  };
+}
+function isConfigured() {
+  const c = cfg(); return c.owner && c.repo;
+}
+function hasToken() {
+  return !!cfg().token;
 }
 
-// ── VIEWS ──
-function showView(name) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  const fab = document.getElementById('add-fab');
-
-  if (name === 'month') {
-    document.getElementById('view-month').classList.add('active');
-    fab.style.display = 'flex';
-    renderMonthDetail();
-  } else if (name === 'settings') {
-    document.getElementById('view-settings').classList.add('active');
-    document.getElementById('nav-settings').classList.add('active');
-    fab.style.display = 'none';
-    loadSettingsFields();
-  } else {
-    document.getElementById('view-overview').classList.add('active');
-    document.getElementById('nav-overview').classList.add('active');
-    fab.style.display = 'none';
-  }
+// ── STATUS BAR ──
+function showStatus(msg, type='', duration=3000) {
+  const bar = document.getElementById('status-bar');
+  bar.textContent = msg;
+  bar.className = 'show' + (type ? ' '+type : '');
+  if (duration) setTimeout(() => bar.className='', duration);
 }
 
-function openMonth(idx) {
-  currentMonth = idx;
-  showView('month');
-}
-
-function navigateMonth(dir) {
-  currentMonth = Math.max(0, Math.min(11, currentMonth + dir));
-  renderMonthDetail();
-}
-
-// ── OVERVIEW ──
-function renderOverview() {
-  const grid = document.getElementById('month-grid');
+// ── RENDER ──
+function buildGrid() {
+  const grid = document.getElementById('year-grid');
   grid.innerHTML = '';
+  MONTHS.forEach((m, i) => {
+    const card = document.createElement('div');
+    card.className = 'month-card';
+    card.innerHTML = `
+      <div class="month-header">
+        <span class="month-name">${m.name}</span>
+        <span class="month-season">${m.season}</span>
+      </div>
+      <div class="month-body">
+        <ul class="task-list" id="tlist-${i}"></ul>
+        <button class="add-task-btn" onclick="openAddTask(${i})">+ Add Task</button>
+      </div>`;
+    grid.appendChild(card);
+  });
+  renderAllTasks();
+}
+
+function renderAllTasks() {
   let total=0, done=0;
   MONTHS.forEach((m, i) => {
+    const ul = document.getElementById('tlist-'+i);
+    if (!ul) return;
+    ul.innerHTML = '';
     const tasks = state.tasks[i] || [];
-    total += tasks.length;
-    done  += tasks.filter(t=>t.done).length;
-    const tile = document.createElement('div');
-    tile.className = 'month-tile';
-    tile.onclick = () => openMonth(i);
-
-    const count = tasks.length;
-    let dotsHtml = '';
-    if (count === 0) {
-      dotsHtml = '<span class="tile-empty">No tasks</span>';
-    } else {
-      tasks.forEach(t => {
-        dotsHtml += `<div class="tile-dot ${t.type}${t.done?' done':''}" style="background:${TYPE_COLORS[t.type]||'#888'}"></div>`;
-      });
-    }
-
-    tile.innerHTML = `
-      <div class="tile-header">
-        <span class="tile-name">${m.name}</span>
-        <span class="tile-count">${count > 0 ? count+'t' : ''}</span>
-      </div>
-      <div class="tile-body">${dotsHtml}</div>`;
-    grid.appendChild(tile);
+    tasks.forEach(t => {
+      total++;
+      if (t.done) done++;
+      const li = document.createElement('li');
+      li.className = 'task-item' + (t.done ? ' done' : '');
+      const meta = [t.field ? '📍 '+t.field : '', t.crop ? '🌾 '+t.crop : '', t.notes || ''].filter(Boolean).join(' · ');
+      li.innerHTML = `
+        <div class="task-dot ${t.type}"></div>
+        <div class="task-content">
+          <div class="task-label">${t.type}</div>
+          ${meta ? `<div class="task-meta">${meta}</div>` : ''}
+        </div>
+        <div class="task-actions">
+          <button class="task-btn done-btn" title="${t.done?'Mark undone':'Mark done'}" onclick="toggleDone(${i},'${t.id}')">${t.done ? '↩' : '✓'}</button>
+          <button class="task-btn" title="Edit" onclick="openEditTask(${i},'${t.id}')">✎</button>
+          <button class="task-btn del-btn" title="Delete" onclick="deleteTask(${i},'${t.id}')">✕</button>
+        </div>`;
+      ul.appendChild(li);
+    });
   });
-  document.getElementById('s-total').textContent = total;
-  document.getElementById('s-done').textContent = done;
-  document.getElementById('s-rem').textContent = total-done;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-remaining').textContent = total - done;
 }
 
-// ── MONTH DETAIL ──
-function renderMonthDetail() {
-  const m = MONTHS[currentMonth];
-  document.getElementById('month-detail-title').textContent = m.name;
-  document.getElementById('month-detail-season').textContent = m.season;
-  document.getElementById('prev-month-btn').disabled = currentMonth === 0;
-  document.getElementById('next-month-btn').disabled = currentMonth === 11;
-
-  // dots nav
-  const dotsEl = document.getElementById('month-nav-dots');
-  dotsEl.innerHTML = '';
-  MONTHS.forEach((_, i) => {
-    const d = document.createElement('div');
-    d.className = 'month-dot' + (i===currentMonth ? ' cur':'');
-    d.onclick = () => { currentMonth=i; renderMonthDetail(); };
-    dotsEl.appendChild(d);
-  });
-
-  const ul = document.getElementById('task-list-detail');
-  const tasks = state.tasks[currentMonth] || [];
-  if (tasks.length === 0) {
-    ul.innerHTML = `<div class="empty-month">
-      <div class="empty-month-icon">🌱</div>
-      <div class="empty-month-text">No tasks for ${m.name} yet.<br>Tap + to add one.</div>
-    </div>`;
-    return;
-  }
-  ul.innerHTML = '';
-  tasks.forEach(t => {
-    const li = document.createElement('li');
-    li.className = 'task-card' + (t.done ? ' done':'');
-    const metaParts = [t.field?'📍 '+t.field:'', t.crop?'🌾 '+t.crop:'', t.notes||''].filter(Boolean);
-    li.innerHTML = `
-      <div class="task-type-badge ${t.type}">${TYPE_EMOJI[t.type]||'📋'}</div>
-      <div class="task-card-info">
-        <div class="task-card-type">${t.type}</div>
-        ${metaParts.length ? `<div class="task-card-meta">${metaParts.join(' · ')}</div>` : ''}
-      </div>
-      <div class="task-card-actions">
-        <button class="card-btn" title="${t.done?'Undo':'Done'}" onclick="toggleDone(${currentMonth},'${t.id}')">${t.done?'↩':'✓'}</button>
-        <button class="card-btn" title="Edit" onclick="openEditSheet(${currentMonth},'${t.id}')">✎</button>
-        <button class="card-btn" title="Delete" onclick="deleteTask(${currentMonth},'${t.id}')">🗑</button>
-      </div>`;
-    ul.appendChild(li);
-  });
-}
-
-// ── SHEET ──
-function openAddSheet() {
+// ── TASK CRUD ──
+function openAddTask(monthIdx) {
+  addingMonth = monthIdx;
   editingTask = null;
-  selectedType = '';
-  document.getElementById('sheet-title').textContent = 'Add Task — ' + MONTHS[currentMonth].name;
-  document.getElementById('sheet-save-btn').textContent = 'Add Task';
-  document.querySelectorAll('.type-option').forEach(o => o.classList.remove('selected'));
-  document.getElementById('sh-field').value = '';
-  document.getElementById('sh-crop').value = '';
-  document.getElementById('sh-notes').value = '';
-  document.getElementById('task-sheet').classList.add('open');
+  document.getElementById('modal-title').textContent = 'Add Task — ' + MONTHS[monthIdx].name;
+  document.getElementById('modal-save-btn').textContent = 'Add Task';
+  document.getElementById('task-type').value = '';
+  document.getElementById('task-field').value = '';
+  document.getElementById('task-crop').value = '';
+  document.getElementById('task-notes').value = '';
+  document.getElementById('task-modal').classList.add('open');
 }
 
-function openEditSheet(monthIdx, taskId) {
-  const task = (state.tasks[monthIdx]||[]).find(t=>t.id===taskId);
+function openEditTask(monthIdx, taskId) {
+  const task = (state.tasks[monthIdx] || []).find(t => t.id === taskId);
   if (!task) return;
   editingTask = {monthIdx, taskId};
-  selectedType = task.type;
-  document.getElementById('sheet-title').textContent = 'Edit Task';
-  document.getElementById('sheet-save-btn').textContent = 'Save Changes';
-  document.querySelectorAll('.type-option').forEach(o => {
-    o.classList.toggle('selected', o.dataset.type === task.type);
-  });
-  document.getElementById('sh-field').value = task.field||'';
-  document.getElementById('sh-crop').value  = task.crop||'';
-  document.getElementById('sh-notes').value = task.notes||'';
-  document.getElementById('task-sheet').classList.add('open');
+  addingMonth = null;
+  document.getElementById('modal-title').textContent = 'Edit Task — ' + MONTHS[monthIdx].name;
+  document.getElementById('modal-save-btn').textContent = 'Save Changes';
+  document.getElementById('task-type').value = task.type;
+  document.getElementById('task-field').value = task.field || '';
+  document.getElementById('task-crop').value = task.crop || '';
+  document.getElementById('task-notes').value = task.notes || '';
+  document.getElementById('task-modal').classList.add('open');
 }
 
-function closeSheet() {
-  document.getElementById('task-sheet').classList.remove('open');
-}
-
-function selectType(type) {
-  selectedType = type;
-  document.querySelectorAll('.type-option').forEach(o => {
-    o.classList.toggle('selected', o.dataset.type === type);
-  });
+function closeModal() {
+  document.getElementById('task-modal').classList.remove('open');
+  editingTask = null; addingMonth = null;
 }
 
 function saveTask() {
-  if (!selectedType) { toast('Please select a task type', 'warn'); return; }
-  const field = document.getElementById('sh-field').value.trim();
-  const crop  = document.getElementById('sh-crop').value.trim();
-  const notes = document.getElementById('sh-notes').value.trim();
+  const type = document.getElementById('task-type').value;
+  if (!type) { alert('Please select a task type.'); return; }
+  const field = document.getElementById('task-field').value.trim();
+  const crop  = document.getElementById('task-crop').value.trim();
+  const notes = document.getElementById('task-notes').value.trim();
 
   if (editingTask) {
     const {monthIdx, taskId} = editingTask;
-    const t = (state.tasks[monthIdx]||[]).find(x=>x.id===taskId);
-    if (t) Object.assign(t, {type:selectedType, field, crop, notes});
+    const arr = state.tasks[monthIdx] || [];
+    const t = arr.find(x => x.id === taskId);
+    if (t) { t.type=type; t.field=field; t.crop=crop; t.notes=notes; }
   } else {
-    if (!state.tasks[currentMonth]) state.tasks[currentMonth] = [];
-    state.tasks[currentMonth].push({id:'t'+Date.now(), type:selectedType, field, crop, notes, done:false});
+    const i = addingMonth;
+    if (!state.tasks[i]) state.tasks[i] = [];
+    state.tasks[i].push({ id: 't'+Date.now(), type, field, crop, notes, done: false });
   }
 
-  closeSheet();
-  renderMonthDetail();
-  renderOverview();
+  closeModal();
+  renderAllTasks();
   autoSave();
 }
 
 function toggleDone(monthIdx, taskId) {
-  const t = (state.tasks[monthIdx]||[]).find(x=>x.id===taskId);
+  const arr = state.tasks[monthIdx] || [];
+  const t = arr.find(x => x.id === taskId);
   if (t) t.done = !t.done;
-  renderMonthDetail();
-  renderOverview();
+  renderAllTasks();
   autoSave();
 }
 
 function deleteTask(monthIdx, taskId) {
   if (!confirm('Delete this task?')) return;
-  state.tasks[monthIdx] = (state.tasks[monthIdx]||[]).filter(t=>t.id!==taskId);
-  renderMonthDetail();
-  renderOverview();
+  state.tasks[monthIdx] = (state.tasks[monthIdx] || []).filter(t => t.id !== taskId);
+  renderAllTasks();
   autoSave();
 }
 
-// ── GITHUB ──
-async function ghFetch(method, body) {
+// ── GITHUB API ──
+async function ghFetch(method, urlPath, body) {
   const c = cfg();
   const url = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${c.path}`;
-  const headers = {'Content-Type':'application/json'};
-  if (c.token) headers['Authorization'] = 'token '+c.token;
-  const opts = {method, headers};
+  const headers = { 'Content-Type': 'application/json' };
+  if (c.token) headers['Authorization'] = 'token ' + c.token;
+  const opts = { method, headers };
   if (body) opts.body = JSON.stringify(body);
   return fetch(url, opts);
 }
@@ -1055,141 +730,154 @@ async function loadFromGitHub() {
   if (!isConfigured()) return;
   try {
     const res = await ghFetch('GET');
-    if (res.status === 404) { githubSha = null; setSyncDot(true); return; }
+    if (res.status === 404) {
+      // File doesn't exist yet — start fresh
+      githubSha = null;
+      return;
+    }
     if (!res.ok) throw new Error('HTTP '+res.status);
     const data = await res.json();
     githubSha = data.sha;
     const decoded = JSON.parse(atob(data.content.replace(/\n/g,'')));
     state = decoded;
-    renderOverview();
-    setSyncDot(true);
+    renderAllTasks();
+    setSyncBadge(true);
+    const now = new Date().toLocaleTimeString();
+    document.getElementById('stat-lastsync').textContent = 'Synced ' + now;
   } catch(e) {
     console.error('Load error', e);
-    setSyncDot(false);
   }
 }
 
 async function saveToGitHub() {
-  if (!isConfigured() || !hasToken()) return;
+  if (!isConfigured() || !hasToken()) return false;
   try {
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(state, null, 2))));
-    const body = {message:'🚜 Update farm schedule', content};
+    const body = {
+      message: '🚜 Update farm schedule',
+      content,
+    };
     if (githubSha) body.sha = githubSha;
-    const res = await ghFetch('PUT', body);
+    const res = await ghFetch('PUT', null, body);
     if (!res.ok) {
       const err = await res.json();
-      if (res.status===409 || (err.message||'').includes('sha')) {
-        toast('⚡ Conflict — reloading…', 'warn', 4000);
-        await loadFromGitHub(); return;
+      // Conflict: file was updated by someone else — reload first
+      if (res.status === 409 || (err.message||'').includes('sha')) {
+        showStatus('⚡ Conflict — reloading latest version…', 'warn', 4000);
+        await loadFromGitHub();
+        return false;
       }
-      throw new Error(err.message||'HTTP '+res.status);
+      throw new Error(err.message || 'HTTP '+res.status);
     }
     const data = await res.json();
     githubSha = data.content.sha;
-    setSyncDot(true);
-    toast('✓ Saved', 'success', 2000);
-    localStorage.setItem('ef_state', JSON.stringify(state));
+    setSyncBadge(true);
+    const now = new Date().toLocaleTimeString();
+    document.getElementById('stat-lastsync').textContent = 'Saved ' + now;
+    showStatus('✓ Saved to GitHub', '', 2500);
+    return true;
   } catch(e) {
-    toast('✗ Save failed: '+e.message, 'error', 5000);
+    showStatus('✗ Save failed: ' + e.message, 'error', 5000);
+    return false;
   }
 }
 
-function autoSave() {
-  localStorage.setItem('ef_state', JSON.stringify(state));
-  if (!isConfigured() || !hasToken()) return;
-  clearTimeout(saveDebounce);
-  saveDebounce = setTimeout(() => saveToGitHub(), 900);
+function setSyncBadge(live) {
+  const b = document.getElementById('sync-badge');
+  b.textContent = live ? 'Live' : 'Offline';
+  b.className = 'sync-badge ' + (live ? 'live' : 'offline');
 }
 
-function setSyncDot(live) {
-  const d = document.getElementById('sync-dot');
-  d.className = live ? 'live' : '';
+let saveDebounce = null;
+function autoSave() {
+  if (!isConfigured() || !hasToken()) {
+    // save to localStorage as fallback
+    localStorage.setItem('ef_state', JSON.stringify(state));
+    return;
+  }
+  clearTimeout(saveDebounce);
+  saveDebounce = setTimeout(() => saveToGitHub(), 800);
 }
 
 function startPolling() {
   if (syncInterval) clearInterval(syncInterval);
   if (!isConfigured()) return;
   syncInterval = setInterval(async () => {
+    // silent background poll
     try {
       const c = cfg();
+      const url = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${c.path}`;
       const headers = {};
-      if (c.token) headers['Authorization'] = 'token '+c.token;
-      const res = await fetch(`https://api.github.com/repos/${c.owner}/${c.repo}/contents/${c.path}`, {headers});
+      if (c.token) headers['Authorization'] = 'token ' + c.token;
+      const res = await fetch(url, {headers});
       if (!res.ok) return;
       const data = await res.json();
       if (data.sha !== githubSha) {
+        // Someone else updated!
         githubSha = data.sha;
         const decoded = JSON.parse(atob(data.content.replace(/\n/g,'')));
         state = decoded;
-        renderOverview();
-        setSyncDot(true);
-        toast('⚡ Updated by a teammate!', '', 3500);
-        const activeView = document.querySelector('.view.active');
-        if (activeView && activeView.id === 'view-month') renderMonthDetail();
+        renderAllTasks();
+        setSyncBadge(true);
+        const now = new Date().toLocaleTimeString();
+        document.getElementById('stat-lastsync').textContent = 'Updated ' + now;
+        showStatus('⚡ Schedule updated by a teammate!', '', 3500);
       }
     } catch(e) { /* silent */ }
-  }, 12000);
+  }, 12000); // every 12s
 }
 
 // ── SETTINGS ──
-function loadSettingsFields() {
+function openSettings() {
   const c = cfg();
   document.getElementById('cfg-owner').value = c.owner;
-  document.getElementById('cfg-repo').value  = c.repo;
-  document.getElementById('cfg-path').value  = c.path||'data.json';
+  document.getElementById('cfg-repo').value = c.repo;
+  document.getElementById('cfg-path').value = c.path || 'data.json';
   document.getElementById('cfg-token').value = c.token;
+  document.getElementById('settings-modal').classList.add('open');
+}
+function closeSettings() {
+  document.getElementById('settings-modal').classList.remove('open');
 }
 async function saveSettings() {
   const owner = document.getElementById('cfg-owner').value.trim();
   const repo  = document.getElementById('cfg-repo').value.trim();
-  const path  = document.getElementById('cfg-path').value.trim()||'data.json';
+  const path  = document.getElementById('cfg-path').value.trim() || 'data.json';
   const token = document.getElementById('cfg-token').value.trim();
-  if (!owner||!repo) { toast('Owner and repo name are required', 'error'); return; }
+  if (!owner || !repo) { alert('Owner and repo name are required.'); return; }
   localStorage.setItem('gh_owner', owner);
-  localStorage.setItem('gh_repo',  repo);
-  localStorage.setItem('gh_path',  path);
+  localStorage.setItem('gh_repo', repo);
+  localStorage.setItem('gh_path', path);
   localStorage.setItem('gh_token', token);
-  toast('Connecting…', 'warn', 0);
+  closeSettings();
+  showStatus('⚙ Connecting to GitHub…', 'warn', 0);
   await loadFromGitHub();
   startPolling();
-  toast('✓ Connected to GitHub!', 'success', 3000);
-}
-
-// ── SWIPE GESTURE on month detail ──
-let touchStartX = 0;
-document.getElementById('view-month').addEventListener('touchstart', e => {
-  touchStartX = e.changedTouches[0].clientX;
-}, {passive:true});
-document.getElementById('view-month').addEventListener('touchend', e => {
-  const dx = e.changedTouches[0].clientX - touchStartX;
-  if (Math.abs(dx) > 60) {
-    if (dx < 0 && currentMonth < 11) { currentMonth++; renderMonthDetail(); }
-    if (dx > 0 && currentMonth > 0)  { currentMonth--; renderMonthDetail(); }
-  }
-}, {passive:true});
-
-// close sheet on overlay tap
-document.getElementById('task-sheet').addEventListener('click', e => {
-  if (e.target === document.getElementById('task-sheet')) closeSheet();
-});
-
-// ── SERVICE WORKER ──
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  showStatus('✓ Connected to GitHub!', '', 3000);
 }
 
 // ── INIT ──
+window.addEventListener('click', e => {
+  if (e.target === document.getElementById('task-modal')) closeModal();
+  if (e.target === document.getElementById('settings-modal')) closeSettings();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); closeSettings(); }
+});
+
 (async function init() {
+  // Try localStorage fallback first
   const local = localStorage.getItem('ef_state');
-  if (local) { try { state = JSON.parse(local); } catch(e){} }
-  renderOverview();
+  if (local) {
+    try { state = JSON.parse(local); } catch(e) {}
+  }
+  buildGrid();
   if (isConfigured()) {
     await loadFromGitHub();
     startPolling();
-    if (!hasToken()) toast('Connected (read-only — add token to save)', 'warn', 5000);
   } else {
-    setSyncDot(false);
-    toast('Go to Settings to connect GitHub ⚙', 'warn', 6000);
+    setSyncBadge(false);
+    showStatus('⚙ Set up GitHub sync to share with your team!', 'warn', 8000);
   }
 })();
 </script>
