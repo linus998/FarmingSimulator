@@ -172,6 +172,50 @@
     min-height: 80px;
   }
 
+  /* ── CURRENT MONTH ── */
+  .month-card.current-month {
+    border: 2px solid var(--wheat);
+    box-shadow: 0 0 0 3px rgba(212,168,67,0.18), 0 4px 24px rgba(212,168,67,0.15);
+  }
+  .month-card.current-month .month-header {
+    background: var(--wheat);
+  }
+  .month-card.current-month .month-name {
+    color: var(--soil);
+  }
+  .month-card.current-month .month-season {
+    color: var(--soil-mid);
+    opacity: 0.8;
+  }
+  .month-card.current-month .month-body {
+    background: #FFFBEE;
+  }
+  .current-month-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--soil);
+    color: var(--wheat);
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+  .set-month-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--wheat-light);
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    opacity: 0.5;
+    transition: opacity 0.15s, background 0.15s;
+    white-space: nowrap;
+  }
+  .set-month-btn:hover { opacity: 1; background: rgba(255,255,255,0.12); }
+  .month-card.current-month .set-month-btn { display: none; }
+
   /* ── TASK ITEMS ── */
   .task-list { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 0.6rem; }
 
@@ -599,10 +643,13 @@ function buildGrid() {
   MONTHS.forEach((m, i) => {
     const card = document.createElement('div');
     card.className = 'month-card';
+    card.id = 'mcard-' + i;
     card.innerHTML = `
-      <div class="month-header">
-        <span class="month-name">${m.name}</span>
+      <div class="month-header" style="display:flex;align-items:center;gap:0.5rem;">
+        <span class="month-name" style="flex:1">${m.name}</span>
         <span class="month-season">${m.season}</span>
+        <span class="current-month-badge" id="cur-badge-${i}" style="display:none">Current</span>
+        <button class="set-month-btn" id="setm-btn-${i}" onclick="setCurrentMonth(${i})" title="Set as current month">▶ Current</button>
       </div>
       <div class="month-body">
         <ul class="task-list" id="tlist-${i}"></ul>
@@ -611,6 +658,32 @@ function buildGrid() {
     grid.appendChild(card);
   });
   renderAllTasks();
+  applyCurrentMonth();
+}
+
+function applyCurrentMonth() {
+  const cur = (state.currentMonth !== undefined && state.currentMonth !== null) ? state.currentMonth : -1;
+  MONTHS.forEach((m, i) => {
+    const card = document.getElementById('mcard-' + i);
+    const badge = document.getElementById('cur-badge-' + i);
+    const btn = document.getElementById('setm-btn-' + i);
+    if (!card) return;
+    if (i === cur) {
+      card.classList.add('current-month');
+      if (badge) badge.style.display = 'inline-block';
+      if (btn) btn.style.display = 'none';
+    } else {
+      card.classList.remove('current-month');
+      if (badge) badge.style.display = 'none';
+      if (btn) btn.style.display = 'inline-block';
+    }
+  });
+}
+
+function setCurrentMonth(i) {
+  state.currentMonth = (state.currentMonth === i) ? null : i;
+  applyCurrentMonth();
+  autoSave();
 }
 
 function renderAllTasks() {
@@ -743,6 +816,7 @@ async function loadFromGitHub() {
     const decoded = JSON.parse(atob(data.content.replace(/\n/g,'')));
     state = decoded;
     renderAllTasks();
+    applyCurrentMonth();
     setSyncBadge(true);
     const now = new Date().toLocaleTimeString();
     document.getElementById('stat-lastsync').textContent = 'Synced ' + now;
@@ -820,6 +894,7 @@ function startPolling() {
         const decoded = JSON.parse(atob(data.content.replace(/\n/g,'')));
         state = decoded;
         renderAllTasks();
+        applyCurrentMonth();
         setSyncBadge(true);
         const now = new Date().toLocaleTimeString();
         document.getElementById('stat-lastsync').textContent = 'Updated ' + now;
