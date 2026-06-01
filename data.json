@@ -42,6 +42,16 @@
         "done": false
       }
     ],
+    "9": [
+      {
+        "id": "t1780338306434",
+        "type": "planting",
+        "field": "59",
+        "crop": "Barley",
+        "notes": "",
+        "done": false
+      }
+    ],
     "10": [
       {
         "id": "t1780268916100",
