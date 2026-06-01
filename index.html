@@ -721,9 +721,9 @@ async function ghFetch(method, body) {
   // Cache-bust GET requests so GitHub CDN never serves stale data
   const bust = method === 'GET' ? `?t=${Date.now()}` : '';
   const url = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${c.path}${bust}`;
-  const headers = { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' };
+  const headers = { 'Content-Type': 'application/json' };
   if (c.token) headers['Authorization'] = 'token ' + c.token;
-  const opts = { method, headers, cache: 'no-store' };
+  const opts = { method, headers };
   if (body) opts.body = JSON.stringify(body);
   return fetch(url, opts);
 }
@@ -809,9 +809,9 @@ function startPolling() {
     try {
       const c = cfg();
       const url = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${c.path}?t=${Date.now()}`;
-      const headers = { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' };
+      const headers = {};
       if (c.token) headers['Authorization'] = 'token ' + c.token;
-      const res = await fetch(url, { headers, cache: 'no-store' });
+      const res = await fetch(url, { headers });
       if (!res.ok) return;
       const data = await res.json();
       if (data.sha !== githubSha) {
