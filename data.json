@@ -118,6 +118,14 @@
         "crop": "Barley",
         "notes": "",
         "done": false
+      },
+      {
+        "id": "t1780355588189",
+        "type": "selling",
+        "field": "",
+        "crop": "carrot",
+        "notes": "1 time",
+        "done": false
       }
     ]
   },
