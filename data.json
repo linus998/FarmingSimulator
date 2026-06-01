@@ -55,7 +55,7 @@
         "field": "62",
         "crop": "Wheat",
         "notes": "",
-        "done": true
+        "done": false
       },
       {
         "id": "t1780344494385",
@@ -63,7 +63,7 @@
         "field": "62",
         "crop": "",
         "notes": "",
-        "done": true
+        "done": false
       }
     ],
     "9": [
