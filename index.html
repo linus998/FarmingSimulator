@@ -716,12 +716,14 @@ function deleteTask(monthIdx, taskId) {
 }
 
 // ── GITHUB API ──
-async function ghFetch(method, urlPath, body) {
+async function ghFetch(method, body) {
   const c = cfg();
-  const url = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${c.path}`;
-  const headers = { 'Content-Type': 'application/json' };
+  // Cache-bust GET requests so GitHub CDN never serves stale data
+  const bust = method === 'GET' ? `?t=${Date.now()}` : '';
+  const url = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${c.path}${bust}`;
+  const headers = { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' };
   if (c.token) headers['Authorization'] = 'token ' + c.token;
-  const opts = { method, headers };
+  const opts = { method, headers, cache: 'no-store' };
   if (body) opts.body = JSON.stringify(body);
   return fetch(url, opts);
 }
@@ -758,7 +760,7 @@ async function saveToGitHub() {
       content,
     };
     if (githubSha) body.sha = githubSha;
-    const res = await ghFetch('PUT', null, body);
+    const res = await ghFetch('PUT', body);
     if (!res.ok) {
       const err = await res.json();
       // Conflict: file was updated by someone else — reload first
@@ -803,13 +805,13 @@ function startPolling() {
   if (syncInterval) clearInterval(syncInterval);
   if (!isConfigured()) return;
   syncInterval = setInterval(async () => {
-    // silent background poll
+    // silent background poll — cache-busted so CDN always returns fresh data
     try {
       const c = cfg();
-      const url = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${c.path}`;
-      const headers = {};
+      const url = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${c.path}?t=${Date.now()}`;
+      const headers = { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' };
       if (c.token) headers['Authorization'] = 'token ' + c.token;
-      const res = await fetch(url, {headers});
+      const res = await fetch(url, { headers, cache: 'no-store' });
       if (!res.ok) return;
       const data = await res.json();
       if (data.sha !== githubSha) {
@@ -824,7 +826,7 @@ function startPolling() {
         showStatus('⚡ Schedule updated by a teammate!', '', 3500);
       }
     } catch(e) { /* silent */ }
-  }, 12000); // every 12s
+  }, 5000); // every 5s — cache-busted so this is fast
 }
 
 // ── SETTINGS ──
