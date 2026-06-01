@@ -11,16 +11,7 @@
       }
     ],
     "1": [],
-    "2": [
-      {
-        "id": "t1780312717284",
-        "type": "cultivating",
-        "field": "5",
-        "crop": "all",
-        "notes": "testing",
-        "done": false
-      }
-    ],
+    "2": [],
     "6": [
       {
         "id": "t1780268883065",
