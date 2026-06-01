@@ -475,6 +475,122 @@
     letter-spacing: 0.03em;
   }
   .stat-pill span { color: var(--soil); font-weight: 700; }
+
+  /* ── TODO LIST ── */
+  .todo-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1.75rem;
+  }
+  .todo-header {
+    background: var(--soil);
+    padding: 0.65rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .todo-header-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--wheat);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .todo-header-sub {
+    font-size: 0.72rem;
+    color: var(--wheat-light);
+    opacity: 0.65;
+    font-weight: 500;
+  }
+  .todo-body {
+    padding: 0.85rem;
+  }
+  .todo-input-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .todo-input {
+    flex: 1;
+    border: 1px solid var(--border);
+    background: var(--cream);
+    border-radius: 7px;
+    padding: 0.5rem 0.75rem;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.92rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .todo-input:focus { border-color: var(--soil-light); }
+  .todo-add-btn {
+    background: var(--soil);
+    color: var(--wheat-pale);
+    border: none;
+    border-radius: 7px;
+    padding: 0.5rem 1.1rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .todo-add-btn:hover { background: var(--soil-mid); }
+  .todo-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+  .todo-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.55rem 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+  .todo-item.done { opacity: 0.45; }
+  .todo-item.done .todo-text { text-decoration: line-through; color: var(--text-light); }
+  .todo-check {
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--soil-light);
+    border-radius: 4px;
+    flex-shrink: 0;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem;
+    color: var(--soil);
+    transition: background 0.15s;
+  }
+  .todo-item.done .todo-check { background: var(--green-pale); border-color: var(--green); color: var(--green); }
+  .todo-text {
+    flex: 1;
+    font-size: 0.88rem;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .todo-del {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-light);
+    font-size: 0.8rem;
+    padding: 2px 5px;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+    flex-shrink: 0;
+  }
+  .todo-del:hover { color: var(--rust); background: rgba(181,74,31,0.08); }
+  .todo-empty {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.82rem;
+    padding: 1rem;
+    font-style: italic;
+  }
 </style>
 </head>
 <body>
@@ -514,6 +630,23 @@
     <div class="legend-item"><div class="legend-dot" style="background:var(--rust-light)"></div> Harvesting</div>
     <div class="legend-item"><div class="legend-dot" style="background:#9C6BD4"></div> Selling</div>
     <div class="legend-item"><div class="legend-dot" style="background:var(--text-light)"></div> Other</div>
+  </div>
+
+  <div class="todo-section">
+    <div class="todo-header">
+      <div>
+        <div class="todo-header-title">To-Do List</div>
+        <div class="todo-header-sub">One-time tasks — completed items stay crossed off forever</div>
+      </div>
+      <span id="todo-stat" style="font-size:0.8rem;color:var(--wheat-light);font-weight:500;"></span>
+    </div>
+    <div class="todo-body">
+      <div class="todo-input-row">
+        <input type="text" class="todo-input" id="todo-input" placeholder="Add a one-time task…" onkeydown="if(event.key==='Enter')addTodo()">
+        <button class="todo-add-btn" onclick="addTodo()">+ Add</button>
+      </div>
+      <ul class="todo-list" id="todo-list"></ul>
+    </div>
   </div>
 
   <div class="year-grid" id="year-grid"></div>
@@ -816,6 +949,7 @@ async function loadFromGitHub() {
     const decoded = JSON.parse(atob(data.content.replace(/\n/g,'')));
     state = decoded;
     renderAllTasks();
+    renderTodos();
     applyCurrentMonth();
     setSyncBadge(true);
     const now = new Date().toLocaleTimeString();
@@ -894,6 +1028,7 @@ function startPolling() {
         const decoded = JSON.parse(atob(data.content.replace(/\n/g,'')));
         state = decoded;
         renderAllTasks();
+        renderTodos();
         applyCurrentMonth();
         setSyncBadge(true);
         const now = new Date().toLocaleTimeString();
@@ -902,6 +1037,56 @@ function startPolling() {
       }
     } catch(e) { /* silent */ }
   }, 5000); // every 5s — cache-busted so this is fast
+}
+
+
+// ── TODO LIST ──
+function renderTodos() {
+  const ul = document.getElementById('todo-list');
+  const stat = document.getElementById('todo-stat');
+  if (!ul) return;
+  const todos = state.todos || [];
+  ul.innerHTML = '';
+  if (todos.length === 0) {
+    ul.innerHTML = '<li class="todo-empty">No tasks yet — add one above</li>';
+  } else {
+    todos.forEach(t => {
+      const li = document.createElement('li');
+      li.className = 'todo-item' + (t.done ? ' done' : '');
+      li.innerHTML = `
+        <div class="todo-check" onclick="toggleTodo('${t.id}')" title="${t.done ? 'Mark undone' : 'Mark done'}">${t.done ? '✓' : ''}</div>
+        <span class="todo-text">${t.text}</span>
+        <button class="todo-del" onclick="deleteTodo('${t.id}')" title="Delete">✕</button>`;
+      ul.appendChild(li);
+    });
+  }
+  const done = todos.filter(t => t.done).length;
+  if (stat) stat.textContent = done + ' / ' + todos.length + ' done';
+}
+
+function addTodo() {
+  const input = document.getElementById('todo-input');
+  const text = input.value.trim();
+  if (!text) return;
+  if (!state.todos) state.todos = [];
+  state.todos.push({ id: 'td' + Date.now(), text, done: false });
+  input.value = '';
+  renderTodos();
+  autoSave();
+}
+
+function toggleTodo(id) {
+  const t = (state.todos || []).find(x => x.id === id);
+  if (t) t.done = !t.done;
+  renderTodos();
+  autoSave();
+}
+
+function deleteTodo(id) {
+  if (!confirm('Delete this to-do?')) return;
+  state.todos = (state.todos || []).filter(x => x.id !== id);
+  renderTodos();
+  autoSave();
 }
 
 // ── SETTINGS ──
@@ -949,6 +1134,7 @@ document.addEventListener('keydown', e => {
     try { state = JSON.parse(local); } catch(e) {}
   }
   buildGrid();
+  renderTodos();
   if (isConfigured()) {
     await loadFromGitHub();
     startPolling();
