@@ -20,6 +20,14 @@
         "crop": "Wheat",
         "notes": "",
         "done": false
+      },
+      {
+        "id": "t1780338362834",
+        "type": "harvesting",
+        "field": "59",
+        "crop": "Barley",
+        "notes": "",
+        "done": false
       }
     ],
     "7": [
