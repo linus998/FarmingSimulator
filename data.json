@@ -10,16 +10,7 @@
         "done": false
       }
     ],
-    "1": [
-      {
-        "id": "t1780312503365",
-        "type": "fertilizing",
-        "field": "64",
-        "crop": "",
-        "notes": "lime",
-        "done": false
-      }
-    ],
+    "1": [],
     "6": [
       {
         "id": "t1780268883065",
