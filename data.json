@@ -147,11 +147,5 @@
     ]
   },
   "currentMonth": 6,
-  "todos": [
-    {
-      "id": "td1780387661894",
-      "text": "Sticky feet mod",
-      "done": true
-    }
-  ]
+  "todos": []
 }
