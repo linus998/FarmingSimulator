@@ -29,6 +29,14 @@
         "crop": "Barley",
         "notes": "",
         "done": false
+      },
+      {
+        "id": "t1780407439917",
+        "type": "selling",
+        "field": "",
+        "crop": "Planks (Short)",
+        "notes": "",
+        "done": false
       }
     ],
     "7": [
