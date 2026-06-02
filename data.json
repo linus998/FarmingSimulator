@@ -128,6 +128,14 @@
         "crop": "Barley",
         "notes": "",
         "done": false
+      },
+      {
+        "id": "t1780369262370",
+        "type": "selling",
+        "field": "",
+        "crop": "Wood Beams",
+        "notes": "",
+        "done": false
       }
     ]
   },
