@@ -147,5 +147,11 @@
     ]
   },
   "currentMonth": 6,
-  "todos": []
+  "todos": [
+    {
+      "id": "td1780433877196",
+      "text": "terraform anywhere mod",
+      "done": false
+    }
+  ]
 }
