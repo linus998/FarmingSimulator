@@ -126,7 +126,7 @@
         "field": "",
         "crop": "Wheat",
         "notes": "",
-        "done": true
+        "done": false
       },
       {
         "id": "t1780338411579",
@@ -134,7 +134,7 @@
         "field": "",
         "crop": "Barley",
         "notes": "",
-        "done": true
+        "done": false
       },
       {
         "id": "t1780369262370",
@@ -142,7 +142,7 @@
         "field": "",
         "crop": "Wood Beams",
         "notes": "",
-        "done": true
+        "done": false
       }
     ]
   },
