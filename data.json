@@ -126,7 +126,7 @@
         "field": "",
         "crop": "Wheat",
         "notes": "",
-        "done": false
+        "done": true
       },
       {
         "id": "t1780338411579",
@@ -134,7 +134,7 @@
         "field": "",
         "crop": "Barley",
         "notes": "",
-        "done": false
+        "done": true
       },
       {
         "id": "t1780369262370",
