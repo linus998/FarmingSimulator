@@ -149,11 +149,6 @@
   "currentMonth": 6,
   "todos": [
     {
-      "id": "td1780433877196",
-      "text": "terraform anywhere mod",
-      "done": true
-    },
-    {
       "id": "td1780439545413",
       "text": "sticky feet?",
       "done": false
