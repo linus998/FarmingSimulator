@@ -81,6 +81,14 @@
         "crop": "",
         "notes": "",
         "done": false
+      },
+      {
+        "id": "t1780773224365",
+        "type": "harvesting",
+        "field": "99",
+        "crop": "soja",
+        "notes": "",
+        "done": false
       }
     ],
     "8": [
