@@ -133,6 +133,14 @@
         "crop": "",
         "notes": "",
         "done": false
+      },
+      {
+        "id": "t1780773259011",
+        "type": "fertilizing",
+        "field": "59",
+        "crop": "",
+        "notes": "",
+        "done": false
       }
     ],
     "10": [
