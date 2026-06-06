@@ -16,6 +16,14 @@
         "crop": "goat milk",
         "notes": "",
         "done": false
+      },
+      {
+        "id": "t1780764598103",
+        "type": "selling",
+        "field": "",
+        "crop": "goat cheese",
+        "notes": "",
+        "done": false
       }
     ],
     "1": [],
