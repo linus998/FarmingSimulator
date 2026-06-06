@@ -91,6 +91,14 @@
         "crop": "Barley",
         "notes": "",
         "done": false
+      },
+      {
+        "id": "t1780760149795",
+        "type": "liming",
+        "field": "59",
+        "crop": "",
+        "notes": "",
+        "done": false
       }
     ],
     "10": [
