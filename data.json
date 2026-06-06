@@ -79,6 +79,14 @@
         "crop": "Planks (Short)",
         "notes": "",
         "done": false
+      },
+      {
+        "id": "t1780775009596",
+        "type": "planting",
+        "field": "59",
+        "crop": "poppy",
+        "notes": "",
+        "done": false
       }
     ],
     "7": [
