@@ -44,6 +44,14 @@
         "crop": "",
         "notes": "",
         "done": false
+      },
+      {
+        "id": "t1780773271180",
+        "type": "fertilizing",
+        "field": "99",
+        "crop": "",
+        "notes": "",
+        "done": false
       }
     ],
     "5": [],
