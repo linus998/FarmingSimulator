@@ -46,7 +46,16 @@
         "done": false
       }
     ],
-    "5": [],
+    "5": [
+      {
+        "id": "t1780855268443",
+        "type": "selling",
+        "field": "",
+        "crop": "Soja",
+        "notes": "",
+        "done": false
+      }
+    ],
     "6": [
       {
         "id": "t1780268883065",
