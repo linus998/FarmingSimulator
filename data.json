@@ -73,14 +73,6 @@
         "done": false
       },
       {
-        "id": "t1780775009596",
-        "type": "planting",
-        "field": "59",
-        "crop": "poppy",
-        "notes": "",
-        "done": false
-      },
-      {
         "id": "t1780775030905",
         "type": "fertilizing",
         "field": "59",
