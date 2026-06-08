@@ -62,6 +62,14 @@
         "crop": "Soja",
         "notes": "",
         "done": false
+      },
+      {
+        "id": "t1780943962509",
+        "type": "selling",
+        "field": "",
+        "crop": "Furniture",
+        "notes": "",
+        "done": false
       }
     ],
     "6": [
