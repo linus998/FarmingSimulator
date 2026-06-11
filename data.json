@@ -39,14 +39,6 @@
     "2": [],
     "3": [
       {
-        "id": "t1780773211328",
-        "type": "planting",
-        "field": "99",
-        "crop": "soja",
-        "notes": "",
-        "done": false
-      },
-      {
         "id": "t1780773266368",
         "type": "liming",
         "field": "99",
