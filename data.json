@@ -167,6 +167,14 @@
         "crop": "",
         "notes": "",
         "done": false
+      },
+      {
+        "id": "t1781191511398",
+        "type": "harvesting",
+        "field": "2",
+        "crop": "Cotton",
+        "notes": "",
+        "done": false
       }
     ],
     "10": [
