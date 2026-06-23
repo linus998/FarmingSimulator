@@ -16,6 +16,14 @@
         "crop": "goat milk produce",
         "notes": "",
         "done": false
+      },
+      {
+        "id": "t1782241320568",
+        "type": "selling",
+        "field": "",
+        "crop": "Woodchips",
+        "notes": "",
+        "done": false
       }
     ],
     "1": [
