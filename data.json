@@ -45,6 +45,14 @@
         "crop": "Clothes",
         "notes": "(only export)",
         "done": false
+      },
+      {
+        "id": "t1784472429405",
+        "type": "planting",
+        "field": "36",
+        "crop": "Corn",
+        "notes": "",
+        "done": false
       }
     ],
     "5": [],
