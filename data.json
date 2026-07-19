@@ -37,7 +37,16 @@
       }
     ],
     "2": [],
-    "3": [],
+    "3": [
+      {
+        "id": "t1784472207214",
+        "type": "selling",
+        "field": "",
+        "crop": "Clothes",
+        "notes": "(only export)",
+        "done": false
+      }
+    ],
     "5": [],
     "6": [
       {
