@@ -55,6 +55,16 @@
         "done": false
       }
     ],
+    "4": [
+      {
+        "id": "t1786027104166",
+        "type": "planting",
+        "field": "2",
+        "crop": "flax",
+        "notes": "",
+        "done": false
+      }
+    ],
     "5": [],
     "6": [
       {
